@@ -1,6 +1,6 @@
 // app controls application event lifecycle
 // BrowserWindow creates and manages app windows
-const { app, BrowserWindow, ipcMain, Menu } = require('electron/main');
+const { app, BrowserWindow, ipcMain, Menu, shell} = require('electron/main');
 
 const path = require('node:path')
 
@@ -18,12 +18,30 @@ const menuItems = [
     submenu: [
       {
         label: "Learn More",
+        click: async () => {
+          await shell.openExternal('https://electronjs.org')
+        }
       },
       {
         type: "separator",
       },
       {
         label: "Exit",
+        click: () => app.quit(),
+      },
+      {
+        role: "close",
+      },
+    ],
+  },
+  {
+    label: "Window",
+    submenu: [
+      {
+        role: "Minimize",
+      },
+      {
+        role: "close",
       },
     ],
   },
