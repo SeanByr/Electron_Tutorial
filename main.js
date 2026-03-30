@@ -1,8 +1,36 @@
 // app controls application event lifecycle
 // BrowserWindow creates and manages app windows
-const { app, BrowserWindow, ipcMain } = require('electron/main');
+const { app, BrowserWindow, ipcMain, Menu } = require('electron/main');
 
 const path = require('node:path')
+
+const menuItems = [
+  {
+    label: "Menu",
+    submenu: [
+      {
+        label: "About",
+      },
+    ],
+  },
+  {
+    label: "File",
+    submenu: [
+      {
+        label: "Learn More",
+      },
+      {
+        type: "separator",
+      },
+      {
+        label: "Exit",
+      },
+    ],
+  },
+]
+
+const menu = Menu.buildFromTemplate(menuItems)
+Menu.setApplicationMenu(menu)
 
 //creastWindow() function loads your web page into a new
 // BrowserWindow instance
