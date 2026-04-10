@@ -2,7 +2,11 @@
 // BrowserWindow creates and manages app windows
 const { app, BrowserWindow, ipcMain, Menu, shell} = require('electron/main');
 
+app.disableHardwareAcceleration();
+
 const path = require('node:path')
+
+
 
 const menuItems = [
   {
@@ -32,6 +36,35 @@ const menuItems = [
         }
       },
       {
+        label: "Open Camara",
+        click: () => {
+          const win2 = new BrowserWindow({
+            height: 600,
+            width: 800,
+            show: false,
+          });
+
+          win2.webContents.openDevTools();
+          win2.loadFile('camera.html');
+          win2.once('ready-to-show', () => win2.show());
+        }
+      },
+      {
+        label: "Github",
+        click: () => {
+          const win2 = new BrowserWindow({
+            height: 300,
+            width: 400,
+            show: false,
+            backgroundColor: "rgba(114, 8, 8, 0.2)",
+          });
+
+          //  win2.loadFile('index2.html');
+          win2.loadURL('https://github.com');
+          win2.once('ready-to-show', () => win2.show());
+        }
+      },
+      {
         label: "Learn More",
         click: async () => {
           await shell.openExternal('https://electronjs.org')
@@ -53,7 +86,7 @@ const menuItems = [
     label: "Window",
     submenu: [
       {
-        role: "Minimize",
+        role: "minimize",
       },
       {
         role: "close",
@@ -64,6 +97,8 @@ const menuItems = [
 
 const menu = Menu.buildFromTemplate(menuItems)
 Menu.setApplicationMenu(menu)
+
+
 
 //creastWindow() function loads your web page into a new
 // BrowserWindow instance
@@ -76,6 +111,17 @@ const createWindow = () => {
           preload: path.join(__dirname, 'preload.js')
         }
     })
+
+    // In main process
+  win.webContents.session.setPermissionRequestHandler(
+  (webContents, permission, callback) => {
+    if (permission === 'media') {
+      callback(true); // Grant camera/mic access
+    } else {
+      callback(false);
+    }
+  }
+);
 
     win.loadFile('index.html')
 }
